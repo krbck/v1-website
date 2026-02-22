@@ -21,10 +21,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate Tag
+        id: tag
+        run: |
+          DATE=$(date -u +%Y%m%d)
+          TAG="${DATE}.${{ github.run_number }}"
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
 
       - name: Build and Push
         run: |
-          IMAGE=ghcr.io/${{ github.repository }}:${{ github.sha }}
+          IMAGE=ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.tag }}
           docker build -t $IMAGE .
           docker push $IMAGE
 
@@ -38,7 +45,8 @@ jobs:
       - name: Update Image Tag
         run: |
           cd gitops/apps/argo-website
-          sed -i "s/tag:.*/tag: \"${{ github.sha }}\"/" values.yaml
+          sed -i "s/tag:.*/tag: \"${{ steps.tag.outputs.tag }}\"/" values.yaml
+
 
       - name: Commit and Push
         run: |
