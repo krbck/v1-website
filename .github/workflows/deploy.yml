@@ -40,17 +40,17 @@ jobs:
         with:
           repository: krbck/gitops-config
           token: ${{ secrets.GITOPS_TOKEN }}
-          path: gitops
+          path: gitops-config
 
       - name: Update Image Tag
         run: |
-          cd gitops/apps/argo-website
+          cd gitops-config/apps/argo-website
           sed -i "s/tag:.*/tag: \"${{ steps.tag.outputs.tag }}\"/" values.yaml
 
 
       - name: Commit and Push
         run: |
-          cd gitops
+          cd gitops-config
           git config user.name "ci-bot"
           git config user.email "ci@local"
           git add .
