@@ -1,9 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>My CI/CD Site</title>
+  <title>Message App</title>
 </head>
 <body>
-  <h1>Version 7 kodda degisiklik yaptım</h1>
+  <h2>Send Message</h2>
+
+  <input type="text" id="messageInput" placeholder="Type something">
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
+    async function sendMessage() {
+      const message = document.getElementById("messageInput").value;
+
+      await fetch("http://api.local/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message })
+      });
+
+      alert("Message sent");
+    }
+  </script>
 </body>
 </html>
