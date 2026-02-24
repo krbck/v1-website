@@ -9,20 +9,47 @@
   <input type="text" id="messageInput" placeholder="Type something">
   <button onclick="sendMessage()">Send</button>
 
+  <h3>Messages</h3>
+  <ul id="messageList"></ul>
+
   <script>
+    async function loadMessages() {
+      const res = await fetch("/api/messages");
+      const messages = await res.json();
+
+      const list = messages.map(m => `
+        <li>
+          ${m.message} <small>[${m.created_at ? new Date(m.created_at).toLocaleString() : 'no timestamp'}]</small>
+          <button onclick="deleteMessage(${m.id})">Delete</button>
+        </li>
+      `).join("");
+
+      document.getElementById("messageList").innerHTML = list;
+    }
+
     async function sendMessage() {
       const message = document.getElementById("messageInput").value;
+      if (!message.trim()) return alert("Please type a message");
 
       await fetch("/api/messages", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message })
       });
 
-      alert("Message sent");
+      document.getElementById("messageInput").value = "";
+      loadMessages();
     }
+
+    async function deleteMessage(id) {
+      if (!confirm("Are you sure you want to delete this message?")) return;
+
+      await fetch(`/api/messages/${id}`, { method: "DELETE" });
+      loadMessages();
+    }
+
+    // Load messages on page load
+    loadMessages();
   </script>
 </body>
 </html>
