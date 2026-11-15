@@ -1,0 +1,15 @@
+# Dependabot: weekly GitHub Actions updates (static site, no npm manifests).
+# Never auto-merged: dependabot-automerge.yml only merges npm patch/minor; these PRs get a comment and wait for you.
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Europe/Istanbul"
+    open-pull-requests-limit: 2
+    groups:
+      actions:
+        patterns: ["*"]

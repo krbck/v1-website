@@ -1,0 +1,7 @@
+# The whole context is served by nginx: keep the git dir (actions/checkout keeps the job
+# token in .git/config), CI files and env files out of the web root.
+.git
+.github
+.env*
+.dockerignore
+Dockerfile
